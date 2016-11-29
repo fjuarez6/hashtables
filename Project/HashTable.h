@@ -2,9 +2,12 @@
 #define HASHTABLE_H
 
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 // CONSTANTS: CAPACITY, STEP_SIZE
+const int CAPACITY = 31;
+const int STEP_SIZE = 3;
 
 /*
 	An empty index should be marked -1.
@@ -47,7 +50,7 @@ public:
 
 	// The Big Three: 
 		// overloaded assignment operator => O(n)
-	HashTable& operator=(const HashTable other);
+	HashTable operator=(const HashTable& other);
 		// copy constructor => O(n)
 	HashTable(const HashTable& other);
 		// destructor => O(1)
@@ -56,7 +59,7 @@ public:
 private:
 	
 	// Function hashValue that passes j => O(1)
-	int hashValue(int j) const;
+	int hashValue(int key, int j) const;
 	
 	int *table;				//pointer to the hash table
     int numOfElements;		//number of items in the hash table

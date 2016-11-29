@@ -6,6 +6,9 @@ using namespace std;
 int main()
 {
 	// Test cases
+	HashTable a(10);
+
+	cout << a;
 
 	cout << endl;
 	system("Pause");
