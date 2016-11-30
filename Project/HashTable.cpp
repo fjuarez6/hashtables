@@ -7,6 +7,8 @@ ostream& operator<<(ostream& out, const HashTable& other)
 	{
 		if (other.table[i] != -1 && other.table[i] != -2)
 			out << "Index " << i << ": " << other.table[i] << endl;
+		else
+			out << "Index " << i << ":" << endl;
 	}
 	return out;
 }
@@ -50,22 +52,26 @@ int HashTable::getCapacity() const
 // Function insert => O(1)
 void HashTable::insert(int num)
 {
-	bool emptyIndx = false;
+	bool freeIndx = false;
 	int j = 0;
 
-	while (!emptyIndx)
+	while (!freeIndx)
 	{
 		int i = hashValue(num, j);
 
-		if (table[i] == -1 || table[i] == -1)
+		if (table[i] == -1 || table[i] == -2)
 		{
-			emptyIndx = true;
+			freeIndx = true;
 			table[i] = num;
 			++numOfElements;
 		}
 		else
 			++j;
 	}
+
+	int treshhold = capacity * 2 / 3;
+	if (numOfElements == treshhold)
+		rehash();
 }
 
 // Function delete => O(1)
@@ -76,9 +82,20 @@ void HashTable::deleteNum(int num)
 	else
 	{
 		int j = 0;
-		int i = hashValue(num, j);
+		bool found = false;
 
-		table[i] = -2;
+		while (!found)
+		{
+			int i = hashValue(num, j);
+
+			if (table[i] == num)
+			{
+				found = true;
+				table[i] = -2;
+			}
+			else
+				++j;
+		}
 	}
 }
 
@@ -112,7 +129,44 @@ bool HashTable::search(int num) const
 // Function rehash => O(n)
 void HashTable::rehash()
 {
+	int newCapacity = ((capacity * 2) + 1);
+	int *newTable = new int[newCapacity];
+	int oldCapacity = capacity;
+	capacity = newCapacity;
 
+
+	for (int k = 0; k < newCapacity; ++k)
+	{
+		newTable[k] = -1;
+	}
+
+	for (int i = 0; i < oldCapacity; ++i)
+	{
+		int num = table[i];
+
+		if (num != -1)
+		{
+			int j = 0;
+			bool freeIndx = false;
+
+			while (!freeIndx)
+			{
+				int indx = hashValue(num, j);
+
+				if (newTable[indx] == -1)
+				{
+					freeIndx = true;
+					newTable[indx] = num;
+				}
+				else
+					++j;
+			}
+		}
+	}
+
+	delete[] table;
+
+	table = newTable;
 }
 
 // Overloaded subscript [ ] operator => O(1)
@@ -130,9 +184,21 @@ void HashTable::emptyTable()
 
 // The Big Three: 
 // overloaded assignment operator => O(n)
-HashTable HashTable::operator=(const HashTable& other)
+HashTable& HashTable::operator=(const HashTable& other)
 {
-	return other;
+	if (this != &other)
+	{
+		delete[] table;
+		table = new int[other.capacity];
+		capacity = other.capacity;
+		numOfElements = other.numOfElements;
+
+		for (int i = 0; i < capacity; ++i)
+		{
+			table[i] = other.table[i];
+		}
+	}
+	return *this;
 }
 
 // copy constructor => O(n)
@@ -157,6 +223,9 @@ HashTable::~HashTable()
 
 int HashTable::hashValue(int key, int j) const
 {
-	int squareJ = pow(j, 2);
-	return ((key + squareJ) % capacity);
+	// quadratic proving
+	return ((key + (j * j)) % capacity);
+
+	//doublehash
+
 }

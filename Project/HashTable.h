@@ -2,7 +2,6 @@
 #define HASHTABLE_H
 
 #include <iostream>
-#include <cmath>
 using namespace std;
 
 // CONSTANTS: CAPACITY, STEP_SIZE
@@ -50,7 +49,7 @@ public:
 
 	// The Big Three: 
 		// overloaded assignment operator => O(n)
-	HashTable operator=(const HashTable& other);
+	HashTable& operator=(const HashTable& other);
 		// copy constructor => O(n)
 	HashTable(const HashTable& other);
 		// destructor => O(1)
