@@ -18,7 +18,7 @@ int main()
 	a.insert(32);
 	a.insert(21);
 
-	cout << a;
+	cout << a << endl;
 
 	a.deleteNum(79);
 

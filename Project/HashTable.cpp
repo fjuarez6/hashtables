@@ -224,8 +224,9 @@ HashTable::~HashTable()
 int HashTable::hashValue(int key, int j) const
 {
 	// quadratic proving
-	return ((key + (j * j)) % capacity);
+	//return ((key + (j * j)) % capacity);
 
 	//doublehash
+	return (((key) + j * (7 - (key % 7))) % capacity);
 
 }
